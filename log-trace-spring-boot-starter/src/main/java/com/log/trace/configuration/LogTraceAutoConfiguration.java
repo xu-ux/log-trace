@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.log.trace.helper.RedisHelper;
 import com.log.trace.properties.RedisProperties;
+import com.log.trace.util.ConsoleColors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -20,6 +21,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import redis.clients.jedis.JedisPoolConfig;
+
+import javax.annotation.PostConstruct;
 
 /**
  * @descriptions:
@@ -114,6 +117,19 @@ public class LogTraceAutoConfiguration {
         return utilsRedis;
     }
 
-
+    @PostConstruct
+    public void init(){
+        System.out.println(ConsoleColors.YELLOW_BACKGROUND + "LOG TRACE CLIENT START"+ ConsoleColors.RESET);
+        System.out.println(ConsoleColors.RED + "\n" +
+                        "██╗      ██████╗  ██████╗    ████████╗██████╗  █████╗  ██████╗███████╗\n" +
+                        "██║     ██╔═══██╗██╔════╝    ╚══██╔══╝██╔══██╗██╔══██╗██╔════╝██╔════╝\n" +
+                        "██║     ██║   ██║██║  ███╗█████╗██║   ██████╔╝███████║██║     █████╗  \n" +
+                        "██║     ██║   ██║██║   ██║╚════╝██║   ██╔══██╗██╔══██║██║     ██╔══╝  \n" +
+                        "███████╗╚██████╔╝╚██████╔╝      ██║   ██║  ██║██║  ██║╚██████╗███████╗\n" +
+                        "╚══════╝ ╚═════╝  ╚═════╝       ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚══════╝\n" +
+                "\n"+ ConsoleColors.RESET);
+        System.out.println(ConsoleColors.BLUE + "Powered By xu-ux" + ConsoleColors.RESET);
+        System.out.println(ConsoleColors.BLUE + "Link: https://github.com/xu-ux"+ ConsoleColors.RESET);
+    }
 
 }
