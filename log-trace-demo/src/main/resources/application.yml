@@ -1,0 +1,24 @@
+server:
+  servlet:
+    context-path: /
+  port: 8800
+spring:
+  application:
+    name: log-trace-demo
+## log-trace-client配置
+trace:
+  redis:
+    host: 192.168.122.22
+    port: 6379
+    password:
+    database: 15
+    pool:
+      #最小空闲连接数
+      min-idle: 1
+      #最大空闲连接数
+      max-idle: 2
+      #最大数据库连接数
+      max-active: 2
+      #连接池最大阻塞等待时间
+      max-wait: 1000ms
+

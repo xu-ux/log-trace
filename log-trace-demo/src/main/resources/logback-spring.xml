@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--scan: 为true时，配置文档如果发生改变，将会被重新加载，默认值true
+    scanPeriod: 设置监测配置文档是否有修改的时间间隔，如果没有给出单位，默认毫秒。 为true时生效，默认时间间隔1分钟
+    debug: 为true时，将打印出logback内部日志信息，实时查看logback运行状态。默认值false -->
+<configuration scan="true" scanPeriod="10 seconds" debug="false">
+
+    <!--日志文件名称：这里spring.application.name表示工程名称-->
+    <springProperty scope="context" name="APP_NAME" source="spring.application.name"/>
+
+    <contextName>${APP_NAME}</contextName>
+
+    <property name="LOG.PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %red([ID:%X{traceId}]) %highlight([%-5level]) %boldYellow([%8.15thread]) %cyan([%-42.42logger{16}]) %magenta(%4.4line) : %m%n" />
+
+    <!-- 输出日志到控制台 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <Pattern>${LOG.PATTERN}</Pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+    </appender>
+
+    <!-- 输出日志到队列 -->
+    <appender name="LOG_TRACE" class="com.log.trace.appender.RedisAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>
+
+    <!-- 下面配置一些第三方包的日志过滤级别，用于避免刷屏-->
+    <Logger name="org.springframework" level="INFO"/>
+    <Logger name="org.springframework.beans.factory.aspectj" level="WARN"/>
+    <Logger name="org.springframework.transaction.interceptor" level="WARN"/>
+    <Logger name="org.springframework.beans.factory.support" level="WARN"/>
+    <Logger name="org.springframework.web.servlet" level="DEBUG"/>
+    <Logger name="org.springframework.transaction" level="WARN"/>
+    <Logger name="org.springframework.jdbc.datasource.DataSourceTransactionManager" level="WARN"/>
+    <Logger name="org.springframework.transaction.support.AbstractPlatformTransactionManager" level="WARN"/>
+    <Logger name="org.springframework.security" level="WARN"/>
+    <Logger name="org.apache.commons" level="WARN"/>
+    <Logger name="org.apache.tomcat" level="INFO"/>
+    <Logger name="org.apache.kafka" level="WARN"/>
+    <Logger name="org.apache.http" level="ERROR"/>
+    <Logger name="httpclient" level="ERROR"/>
+    <Logger name="net.sf.ehcache" level="WARN"/>
+    <Logger name="org.apache.zookeeper" level="WARN"/>
+    <Logger name="org.I0Itec" level="WARN"/>
+    <Logger name="com.meetup.memcached" level="WARN"/>
+    <Logger name="org.mongodb.driver" level="INFO"/>
+    <Logger name="org.quartz.core" level="INFO"/>
+    <Logger name="io.netty" level="INFO"/>
+    <Logger name="com.google" level="WARN"/>
+    <logger name="io.lettuce.core" level="INFO"/>
+    <logger name="java.sql.Connection" level="DEBUG"/>
+    <logger name="java.sql.Statement" level="DEBUG"/>
+    <logger name="java.sql.PreparedStatement" level="DEBUG"/>
+    <logger name="org.springframework.data.elasticsearch.client.WIRE" level="WARN"/>
+    <logger name="com.xxl.job.core.thread" level="INFO"/>
+    <logger name="io.lettuce.core.protocol" level="INFO" />
+
+
+    <!-- 注意这个name，固定为TRACE -->
+    <logger name="TRACE" level="INFO">
+        <appender-ref ref="LOG_TRACE"/>
+    </logger>
+
+    <root level="DEBUG">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+</configuration>

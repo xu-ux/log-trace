@@ -1,0 +1,30 @@
+server:
+  servlet:
+    context-path: /
+  port: 9900
+spring:
+  application:
+    name: log-trace-server
+  #redis
+  redis:
+    host: 192.168.122.22
+    port: 6379
+    timeout: 10s
+    database: 15
+    password:
+    lettuce:
+      pool:
+        #最小空闲连接数
+        min-idle: 0
+        #最大空闲连接数
+        max-idle: 2
+        #最大数据库连接数
+        max-active: 8
+        #连接池最大阻塞等待时间
+        max-wait: 1000ms
+es:
+  host: 192.168.122.22
+  port: 9200
+  username: elastic
+  password: password
+
