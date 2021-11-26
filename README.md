@@ -43,7 +43,7 @@ Redis->ElasticSearch: Server：取出数据，存至ES
 
 在需要集成的业务项目下
 
-pom文件引入客户端
+#### 业务项目pom文件引入客户端
 ```xml
     <dependency>
         <groupId>com.log.trace</groupId>
@@ -52,8 +52,11 @@ pom文件引入客户端
     </dependency>
 ```
 
+#### 业务项目yaml配置
+
 yaml文件增加log-trace使用的redis连接
 >注意：此配置不影响spring-boot-data-redis的autoconfig
+
 ```yaml
 ## log-trace-client配置
 trace:
@@ -74,7 +77,32 @@ trace:
 
 ```
 
+#### 业务项目logback配置
+```xml
+    <appender name="LOG_TRACE" class="com.log.trace.appender.RedisAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>
+        
+    <!-- 注意这个name，固定为TRACE -->
+    <logger name="TRACE" level="INFO">
+        <appender-ref ref="LOG_TRACE"/>
+    </logger>
+```
+
+#### 业务项目使用
+```java
+
+LOG.info("业务操作日志信息 info:{} | Business operation log information info:{}",dateTimeStr,dateTimeStr);
+
+```
+
+
+#### 服务端修改
 服务端需要修改yaml文件的`spring.redis.`端口、IP等，保持和客户端的一致
+
+
 
 详细请看`log-trace-demo`工程
 
