@@ -91,6 +91,53 @@ trace:
     </logger>
 ```
 
+#### 业务项目配置自己的Redis
+
+建议如下配置：
+```java
+@Configuration
+@AutoConfigureAfter(RedisAutoConfiguration.class)
+public class RedisConfig {
+    
+    @Primary
+    @Bean(name = "lettuceConnectionFactory")
+    public LettuceConnectionFactory defaultRedisConnectionFactory(RedisStandaloneConfiguration redisStandaloneConfiguration) {
+        return new LettuceConnectionFactory(redisStandaloneConfiguration);
+    }
+    
+    @Primary
+    @Bean(name = "redisStandaloneConfiguration")
+    public RedisStandaloneConfiguration redisConfiguration(RedisProperties redisProperties){
+        RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
+        configuration.setHostName(redisProperties.getHost());
+        configuration.setPassword(redisProperties.getPassword());
+        configuration.setDatabase(redisProperties.getDatabase());
+        configuration.setPort(redisProperties.getPort());
+        return configuration;
+    }
+    
+    @Bean
+    public RedisTemplate<Object, Object> redisTemplate1(LettuceConnectionFactory lettuceConnectionFactory){
+        RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(lettuceConnectionFactory);
+        // 使用Jackson2JsonRedisSerialize 替换默认的jdkSerializeable序列化
+        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
+        ObjectMapper objectMapper = new ObjectMapper().disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+        objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+        objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+        jackson2JsonRedisSerializer.setObjectMapper(objectMapper);
+        // 设置value的序列化规则和 key的序列化规则
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
+        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+        redisTemplate.setHashValueSerializer(jackson2JsonRedisSerializer);
+        redisTemplate.afterPropertiesSet();
+        return redisTemplate;
+    }
+}
+
+```
+
 #### 业务项目使用
 ```java
 

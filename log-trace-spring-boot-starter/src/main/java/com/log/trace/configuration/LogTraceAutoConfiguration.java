@@ -62,7 +62,7 @@ public class LogTraceAutoConfiguration {
         RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
         configuration.setHostName(redisProperties.getHost());
         configuration.setPassword(redisProperties.getPassword());
-        configuration.setDatabase(redisProperties.getDatebase());
+        configuration.setDatabase(redisProperties.getDatabase());
         configuration.setPort(redisProperties.getPort());
         return configuration;
     }
@@ -76,7 +76,7 @@ public class LogTraceAutoConfiguration {
         JedisConnectionFactory factory = new JedisConnectionFactory(redisStandaloneConfiguration);
         factory.setPoolConfig(jedisPoolConfig);
         log.info("【TraceLog】初始化TraceRedis服务成功 host:{} port:{} database:{}",redisProperties.getHost(),
-                redisProperties.getPort(),redisProperties.getDatebase());
+                redisProperties.getPort(),redisProperties.getDatabase());
         return factory;
     }
 

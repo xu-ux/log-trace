@@ -24,7 +24,7 @@ public class RedisProperties {
 
     private String password;
 
-    private int datebase = 15;
+    private int database = 15;
 
     private Pool pool;
 
