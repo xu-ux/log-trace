@@ -1,7 +1,7 @@
 package com.log.trace.global.filter;
 
-import com.fasterxml.uuid.Generators;
 import com.log.trace.pojo.Constants;
+import com.log.trace.util.IdUtils;
 import com.log.trace.util.thread.TraceIdThreadLocal;
 import org.springframework.util.StringUtils;
 
@@ -22,7 +22,7 @@ public class LogFilter implements Filter {
         //如果有上层调用就用上层的ID
         HttpServletRequest request = (HttpServletRequest)servletRequest;
         String header = request.getHeader(Constants.TRACE_ID);
-        TraceIdThreadLocal.add(StringUtils.isEmpty(header) ? Generators.timeBasedGenerator().generate().toString() : header);
+        TraceIdThreadLocal.add(StringUtils.isEmpty(header) ? IdUtils.getUUID() : header);
         filterChain.doFilter(servletRequest,servletResponse);
     }
 

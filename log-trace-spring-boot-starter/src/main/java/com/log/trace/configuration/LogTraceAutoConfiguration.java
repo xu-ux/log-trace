@@ -117,6 +117,9 @@ public class LogTraceAutoConfiguration {
         return utilsRedis;
     }
 
+    /**
+     * 初始化
+     */
     @PostConstruct
     public void init(){
         System.out.println(ConsoleColors.YELLOW_BACKGROUND + "LOG TRACE CLIENT START"+ ConsoleColors.RESET);

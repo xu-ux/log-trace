@@ -1,5 +1,7 @@
 package com.log.trace.util;
 
+import com.fasterxml.uuid.Generators;
+
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -20,16 +22,16 @@ public class IdUtils {
 
     public final static String PATTERN_3="yyyyMMddHHmmssSSSS";
 
-    /**
-     * 获取替换"-"的UUID
-     * @return
-     */
     public static String getUUID(){
-        return UUID.randomUUID().toString().replace("-", "");
+        return Generators.timeBasedGenerator().generate().toString();
+    }
+
+    public static String getSimpleUUID(){
+        return Generators.timeBasedGenerator().generate().toString().replace("-", "");
     }
 
     public static String getDateWithServer(){
-        return LocalDateTime.now().format(DateTimeFormatter.ofPattern(PATTERN_1)).concat("_internal_service ");
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern(PATTERN_1)).concat("_internal_service");
     }
 
     /**
@@ -44,20 +46,12 @@ public class IdUtils {
             return new SimpleDateFormat(PATTERN_1).format(new Date()) + String.format("%010d", hashCodeV);
     }
 
-    /**
-     * 获取唯一id
-     * @return
-     */
     public static String getSerialId() {
         int hashCodeV = UUID.randomUUID().toString().hashCode();
         hashCodeV = hashCodeV < 0 ? -hashCodeV : hashCodeV;
         return new SimpleDateFormat(PATTERN_2).format(new Date()) + String.format("%010d", hashCodeV);
     }
 
-    /**
-     * 获取唯一id
-     * @return
-     */
     public static String getSerialStrictId() {
         int hashCodeV = UUID.randomUUID().toString().hashCode();
         hashCodeV = hashCodeV < 0 ? -hashCodeV : hashCodeV;
