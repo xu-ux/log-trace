@@ -117,7 +117,7 @@ public class RedisConfig {
     }
     
     @Bean
-    public RedisTemplate<Object, Object> redisTemplate1(LettuceConnectionFactory lettuceConnectionFactory){
+    public RedisTemplate<Object, Object> redisTemplate(LettuceConnectionFactory lettuceConnectionFactory){
         RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(lettuceConnectionFactory);
         // 使用Jackson2JsonRedisSerialize 替换默认的jdkSerializeable序列化
