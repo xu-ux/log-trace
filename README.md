@@ -55,7 +55,7 @@ Redis->ElasticSearch: Server：取出数据，存至ES
 #### 业务项目yaml配置
 
 yaml文件增加log-trace使用的redis连接
->注意：此配置不影响spring-boot-data-redis的autoconfig
+>注意：此配置不影响spring-boot-starter-data-redis的autoconfig
 
 ```yaml
 ## log-trace-client配置
@@ -149,6 +149,66 @@ LOG.info("业务操作日志信息 info:{} | Business operation log information 
 #### 服务端修改
 服务端需要修改yaml文件的`spring.redis.`端口、IP等，保持和客户端的一致
 
+## 其他🩺
+
+#### 1.与OpenFeign项目配合
+
+与OpenFeign项目配合使用时，需要加入拦截器，传递traceId
+```java
+@Component
+public class FeignInterceptor implements RequestInterceptor {
+
+    public static final String TRACE_ID_HEADER = "traceId";
+
+    @Override
+    public void apply(RequestTemplate requestTemplate) {
+        requestTemplate.header(TRACE_ID_HEADER, MDC.get(TRACE_ID_HEADER));
+    }
+}
+
+```
+
+#### 2.与SpringCloudGateway项目配合
+
+与SpringCloudGateway项目配合使用时，需要加入过滤器，初始化traceId
+```java
+@Component
+public class TraceFilter implements GlobalFilter, Ordered {
+
+    public static final String TRACE_ID_HEADER = "traceId";
+    
+    @Override
+    public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+        exchange.getRequest().mutate().header(TRACE_ID_HEADER, IdUtil.randomUUID()).build();
+        return chain.filter(exchange);
+    }
+
+    @Override
+    public int getOrder() {
+        return 0;
+    }
+}
+
+```
+
+#### 3.其他Http调用工具配合
+
+使用RestTemplate,OkHttp,HttpClient等工具时，如果需要传递traceId，请添加如下拦截器到工具中
+```java
+com.log.trace.global.interceptor.HttpClientTraceIdInterceptor
+com.log.trace.global.interceptor.OkHttpTraceIdInterceptor
+com.log.trace.global.interceptor.RestTemplateTraceIdInterceptor
+```
+
+例如：
+```java
+    @Bean
+    public RestTemplate restTemplate(ClientHttpRequestFactory factory){
+        RestTemplate restTemplate = new RestTemplate(factory);
+        restTemplate.setInterceptors(Collections.singletonList(new RestTemplateTraceIdInterceptor()));
+        return restTemplate;
+    }
+```
 
 
 详细请看`log-trace-demo`工程
