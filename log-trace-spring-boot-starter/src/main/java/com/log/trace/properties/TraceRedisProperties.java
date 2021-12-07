@@ -16,7 +16,7 @@ import java.time.Duration;
 @Setter
 @ToString
 @ConfigurationProperties(prefix = "trace.redis")
-public class RedisProperties {
+public class TraceRedisProperties {
 
     private String host = "localhost";
 

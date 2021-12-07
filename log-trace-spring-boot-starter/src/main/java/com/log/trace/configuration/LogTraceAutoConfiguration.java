@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.log.trace.helper.RedisHelper;
-import com.log.trace.properties.RedisProperties;
+import com.log.trace.properties.TraceRedisProperties;
 import com.log.trace.util.ConsoleColors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,12 +32,12 @@ import javax.annotation.PostConstruct;
  */
 @Slf4j
 @Configuration
-@EnableConfigurationProperties({RedisProperties.class})
+@EnableConfigurationProperties({TraceRedisProperties.class})
 @ComponentScan(basePackages = {"com.log.trace"})
 public class LogTraceAutoConfiguration {
 
     @Autowired
-    private RedisProperties redisProperties;
+    private TraceRedisProperties traceRedisProperties;
 
     /**
      * 连接池属性配置
@@ -46,9 +46,9 @@ public class LogTraceAutoConfiguration {
     @Bean(name = "traceJedisPoolConfig")
     public JedisPoolConfig poolConfig() {
         JedisPoolConfig poolConfig = new JedisPoolConfig();
-        poolConfig.setMaxIdle(redisProperties.getPool().getMaxIdle());
-        poolConfig.setMaxTotal(redisProperties.getPool().getMaxActive());
-        poolConfig.setMaxWaitMillis(redisProperties.getPool().getMaxWait().toMillis());
+        poolConfig.setMaxIdle(traceRedisProperties.getPool().getMaxIdle());
+        poolConfig.setMaxTotal(traceRedisProperties.getPool().getMaxActive());
+        poolConfig.setMaxWaitMillis(traceRedisProperties.getPool().getMaxWait().toMillis());
         poolConfig.setTestOnBorrow(true);
         return poolConfig;
     }
@@ -60,10 +60,10 @@ public class LogTraceAutoConfiguration {
     @Bean(name = "traceRedisStandaloneConfiguration")
     public RedisStandaloneConfiguration redisConfig(){
         RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
-        configuration.setHostName(redisProperties.getHost());
-        configuration.setPassword(redisProperties.getPassword());
-        configuration.setDatabase(redisProperties.getDatabase());
-        configuration.setPort(redisProperties.getPort());
+        configuration.setHostName(traceRedisProperties.getHost());
+        configuration.setPassword(traceRedisProperties.getPassword());
+        configuration.setDatabase(traceRedisProperties.getDatabase());
+        configuration.setPort(traceRedisProperties.getPort());
         return configuration;
     }
 
@@ -75,8 +75,8 @@ public class LogTraceAutoConfiguration {
                                                                @Qualifier("traceJedisPoolConfig")  JedisPoolConfig jedisPoolConfig) {
         JedisConnectionFactory factory = new JedisConnectionFactory(redisStandaloneConfiguration);
         factory.setPoolConfig(jedisPoolConfig);
-        log.info("【TraceLog】初始化TraceRedis服务成功 host:{} port:{} database:{}",redisProperties.getHost(),
-                redisProperties.getPort(),redisProperties.getDatabase());
+        log.info(ConsoleColors.getDefault()+"初始化TraceRedis服务成功 host:{} port:{} database:{}",traceRedisProperties.getHost(),
+                traceRedisProperties.getPort(),traceRedisProperties.getDatabase());
         return factory;
     }
 

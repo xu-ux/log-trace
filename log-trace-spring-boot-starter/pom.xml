@@ -44,11 +44,11 @@
         </dependency>
 
         <!-- uuid -->
-        <dependency>
+        <!--<dependency>
             <groupId>com.fasterxml.uuid</groupId>
             <artifactId>java-uuid-generator</artifactId>
             <version>3.1.4</version>
-        </dependency>
+        </dependency>-->
 
         <!-- jedis -->
         <dependency>

@@ -22,7 +22,7 @@ public class LogFilter implements Filter {
         //如果有上层调用就用上层的ID
         HttpServletRequest request = (HttpServletRequest)servletRequest;
         String header = request.getHeader(Constants.TRACE_ID);
-        TraceIdThreadLocal.add(StringUtils.isEmpty(header) ? IdUtils.getUUID() : header);
+        TraceIdThreadLocal.add(StringUtils.isEmpty(header) ? IdUtils.uuid() : header);
         filterChain.doFilter(servletRequest,servletResponse);
     }
 

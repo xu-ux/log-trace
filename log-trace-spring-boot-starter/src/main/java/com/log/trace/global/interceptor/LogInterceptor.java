@@ -22,7 +22,7 @@ public class LogInterceptor implements HandlerInterceptor {
         //如果有上层调用就用上层的ID
         String traceId = request.getHeader(Constants.TRACE_ID);
         if (traceId == null) {
-            traceId = IdUtils.getUUID();
+            traceId = IdUtils.uuid();
         }
         MDC.put(Constants.TRACE_ID, traceId);
         return true;
